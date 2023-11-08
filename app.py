@@ -1,11 +1,15 @@
-from flask import Flask,render_template,Response
+import json
+from flask import Flask,render_template,Response, request
 import cv2
 from flask_sock import Sock
 from service.visual_manipulation import grayscale, haarcascade
+import pusher
 
 app=Flask(__name__)
 sock = Sock(app)
 camera=cv2.VideoCapture(0)
+
+pusher_client = pusher.Pusher(app_id=u'1701410', key=u'1d2909fb087a3bfc2945', secret=u'a9f21dfaf03cad7d1de5', cluster=u'mt1')
 
 def generate_frames():
     while True:
@@ -50,6 +54,17 @@ def websocket_endpoint(ws):
         # print("a")
         data = ws.receive()
         ws.send(haarcascade(data))
+
+@app.route("/pusher/auth", methods=['POST'])
+def pusher_authentication():
+
+  # This authenticates every user. Don't do this in production!
+  # pusher_client is obtained through pusher.Pusher( ... )
+  auth = pusher_client.authenticate(
+    channel=request.form['channel_name'],
+    socket_id=request.form['socket_id']
+  )
+  return json.dumps(auth)
 
 
     # await websocket.accept()
