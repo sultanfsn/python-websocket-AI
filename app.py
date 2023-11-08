@@ -9,7 +9,7 @@ app=Flask(__name__)
 sock = Sock(app)
 camera=cv2.VideoCapture(0)
 
-pusher_client = pusher.Pusher(app_id=u'1701410', key=u'1d2909fb087a3bfc2945', secret=u'a9f21dfaf03cad7d1de5', cluster=u'mt1')
+pusher_client = pusher.Pusher(app_id=u'APP_ID', key=u'APP_KEY', secret=u'SECRET', cluster=u'mt1')
 
 def generate_frames():
     while True:
